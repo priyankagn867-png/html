@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScamShield UPI</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=4.1.0">
+
+<style>
+/* =========================================================
+   WELCOME PAGE
+   ========================================================= */
+
+#welcomePage {
+    min-height: 100vh;
+    width: 100%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+#welcomePage.hidden {
+    display: none;
+}
+
+.welcome-content {
+    width: 100%;
+    max-width: 760px;
+}
+
+.welcome-content h1 {
+    margin: 0;
+    color: #111827;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+}
+
+.welcome-content p {
+    margin: 22px auto 0;
+    color: #64748b;
+    font-size: 19px;
+    line-height: 1.6;
+    max-width: 650px;
+}
+
+.welcome-button {
+    margin-top: 55px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #ffffff;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.20);
+}
+
+.welcome-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(37, 99, 235, 0.28);
+}
+
+.welcome-button:active {
+    transform: translateY(0);
+}
+
+.welcome-note {
+    margin-top: 18px !important;
+    font-size: 13px !important;
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   MAIN APPLICATION WRAPPER
+   ========================================================= */
+
+#mainApplication {
+    display: block;
+}
+
+#mainApplication.hidden {
+    display: none;
+}
+
+
+/* =========================================================
+   MOBILE WELCOME PAGE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    #welcomePage {
+        padding: 30px 20px;
+    }
+
+    .welcome-content h1 {
+        font-size: 34px;
+        letter-spacing: -0.8px;
+    }
+
+    .welcome-content p {
+        font-size: 16px;
+    }
+
+    .welcome-button {
+        margin-top: 40px;
+        width: 100%;
+        max-width: 260px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     WELCOME PAGE
+     ========================================================= -->
+
+<section id="welcomePage">
+
+    <div class="welcome-content">
+
+        <h1>
+            Welcome to Scam Shield UPI Analyser
+        </h1>
+
+        <p>
+            To make your transactions safe and protect you from UPI fraud.
+        </p>
+
+        <button
+            type="button"
+            id="homePageButton"
+            class="welcome-button"
+        >
+            HOME PAGE →
+        </button>
+
+        <p class="welcome-note">
+            Smart pre-payment fraud detection system
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MAIN SCAMSHIELD APPLICATION
+     ========================================================= -->
+
+<div id="mainApplication" class="hidden">
+
+<header class="topbar">
+
+    <div class="brand" data-page-target="homePage">
+
+        <div class="logo">S</div>
+
+        <div>
+            <h1>ScamShield UPI</h1>
+            <p>PRE-PAYMENT FRAUD INTERCEPTION</p>
+        </div>
+
+    </div>
+
+    <nav class="main-nav">
+
+        <button
+            type="button"
+            class="nav-btn active"
+            data-page-target="homePage"
+        >
+            Home
+        </button>
+
+        <button
+            type="button"
+            class="nav-btn"
+            data-page-target="analyzePage"
+        >
+            Analyze
+        </button>
+
+        <button
+            type="button"
+            class="nav-btn"
+            data-page-target="resultPage"
+        >
+            Result
+        </button>
+
+        <button
+            type="button"
+            class="nav-btn"
+            data-page-target="historyPage"
+        >
+            History
+        </button>
+
+    </nav>
+
+    <div class="status">
+        <span class="status-dot"></span>
+        Engine Online
+    </div>
+
+</header>
+
+
+<main class="app-shell">
+
+
+<!-- =========================================================
+     ANALYSIS OVERLAY
+     ========================================================= -->
+
+<div
+    id="analysisOverlay"
+    class="analysis-overlay hidden"
+    hidden
+>
+
+    <div class="analysis-modal">
+
+        <div class="scan-icon">
+            <div class="scan-ring"></div>
+            <div class="scan-shield">S</div>
+        </div>
+
+        <p class="eyebrow">
+            SCAMSHIELD PRE-PAYMENT CHECK
+        </p>
+
+        <h2>
+            Analyzing transaction...
+        </h2>
+
+        <p class="analysis-subtitle">
+            Checking multiple fraud-risk signals before generating a decision.
+        </p>
+
+        <div class="analysis-steps">
+
+            <div id="scanStep1" class="analysis-step">
+
+                <span class="step-indicator"></span>
+
+                <div>
+                    <strong>Transaction Context</strong>
+                    <small>Checking amount and payment context</small>
+                </div>
+
+                <b class="step-result">...</b>
+
+            </div>
+
+
+            <div id="scanStep2" class="analysis-step">
+
+                <span class="step-indicator"></span>
+
+                <div>
+                    <strong>Recipient Intelligence</strong>
+                    <small>Evaluating recipient trust signals</small>
+                </div>
+
+                <b class="step-result">...</b>
+
+            </div>
+
+
+            <div id="scanStep3" class="analysis-step">
+
+                <span class="step-indicator"></span>
+
+                <div>
+                    <strong>Scam Language</strong>
+                    <small>Looking for social-engineering patterns</small>
+                </div>
+
+                <b class="step-result">...</b>
+
+            </div>
+
+
+            <div id="scanStep4" class="analysis-step">
+
+                <span class="step-indicator"></span>
+
+                <div>
+                    <strong>Behavioral Analysis</strong>
+                    <small>Comparing recent spending behavior</small>
+                </div>
+
+                <b class="step-result">...</b>
+
+            </div>
+
+        </div>
+
+
+        <div class="analysis-progress">
+            <div id="analysisProgress"></div>
+        </div>
+
+        <p
+            id="analysisStatus"
+            class="analysis-status"
+        >
+            Initializing ScamShield engine...
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     HOME PAGE
+     ========================================================= -->
+
+<section
+    id="homePage"
+    class="app-page active-page"
+>
+
+    <div class="home-layout">
+
+        <div class="home-copy">
+
+            <p class="eyebrow">
+                SCAMSHIELD UPI 4.1
+            </p>
+
+            <h2>
+                Think before <span>you transfer.</span>
+            </h2>
+
+            <p class="home-description">
+                ScamShield analyzes a payment before presenting
+                an explainable fraud-risk decision using multiple
+                intelligent signals.
+            </p>
+
+            <div class="home-actions">
+
+                <button
+                    type="button"
+                    class="primary-btn large-btn"
+                    data-page-target="analyzePage"
+                >
+                    Check a Transaction →
+                </button>
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    data-page-target="historyPage"
+                >
+                    View History
+                </button>
+
+            </div>
+
+            <div class="prototype-tag">
+                Educational prototype · Not connected to real UPI infrastructure
+            </div>
+
+        </div>
+
+
+        <div class="home-visual">
+
+            <div class="shield-circle">
+                <div class="shield-icon">✓</div>
+            </div>
+
+            <div class="floating-card card-one">
+                <span class="mini-dot green"></span>
+                Transaction Context
+            </div>
+
+            <div class="floating-card card-two">
+                <span class="mini-dot amber"></span>
+                Behavioral Analysis
+            </div>
+
+            <div class="floating-card card-three">
+                <span class="mini-dot red"></span>
+                Scam Detection
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="signal-strip">
+
+        <div>
+            <strong>01</strong>
+            Transaction Context
+        </div>
+
+        <div>
+            <strong>02</strong>
+            Recipient Intelligence
+        </div>
+
+        <div>
+            <strong>03</strong>
+            Scam Language
+        </div>
+
+        <div>
+            <strong>04</strong>
+            Behavioral Analysis
+        </div>
+
+        <div>
+            <strong>05</strong>
+            Explainable Decision
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     ANALYZE PAGE
+     ========================================================= -->
+
+<section
+    id="analyzePage"
+    class="app-page"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <p class="eyebrow">
+                PAYMENT SAFETY CHECK
+            </p>
+
+            <h2>
+                Analyze Transaction
+            </h2>
+
+            <p>
+                Enter transaction information before making a simulated payment.
+            </p>
+
+        </div>
+
+        <button
+            type="button"
+            class="secondary-btn"
+            data-page-target="homePage"
+        >
+            ← Home
+        </button>
+
+    </div>
+
+
+    <div class="analyze-layout">
+
+        <div class="panel transaction-panel">
+
+            <div class="panel-title">
+
+                <div class="panel-number">
+                    01
+                </div>
+
+                <div>
+                    <h3>Payment Details</h3>
+                    <p>Enter the transaction to evaluate.</p>
+                </div>
+
+            </div>
+
+
+            <form id="analyzeForm">
+
+                <div class="form-grid">
+
+                    <!-- TRANSACTION AMOUNT -->
+
+                    <div class="form-group">
+
+                        <label for="amount">
+                            Transaction amount (₹)
+                        </label>
+
+                        <input
+                            id="amount"
+                            type="number"
+                            min="1"
+                            step="0.01"
+                            placeholder="Example: 1500"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- RECIPIENT NAME -->
+
+                    <div class="form-group">
+
+                        <label for="payee">
+                            Recipient name
+                        </label>
+
+                        <input
+                            id="payee"
+                            type="text"
+                            placeholder="Example: Rahul"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- UPI ID -->
+
+                    <div class="form-group">
+
+                        <label for="upi_id">
+                            Recipient UPI ID
+                        </label>
+
+                        <input
+                            id="upi_id"
+                            type="text"
+                            placeholder="Example: rahul@okaxis"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PAYMENT NOTE -->
+
+                    <div class="form-group">
+
+                        <label for="note">
+                            Payment note
+                        </label>
+
+                        <input
+                            id="note"
+                            type="text"
+                            placeholder="Example: Lunch payment"
+                        >
+
+                    </div>
+
+
+                    <!-- =================================================
+                         FRAUD MESSAGE - NEW FIELD
+                         ================================================= -->
+
+                    <div class="form-group">
+
+                        <label for="fraud_message">
+                            Fraud Message
+                        </label>
+
+                        <textarea
+                            id="fraud_message"
+                            name="fraud_message"
+                            rows="4"
+                            placeholder="Paste the message received from the sender here..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NEW RECIPIENT -->
+
+                <label class="checkbox-label">
+
+                    <input
+                        id="new_payee"
+                        type="checkbox"
+                    >
+
+                    This is a new recipient
+
+                </label>
+
+
+                <!-- ERROR -->
+
+                <p
+                    id="formError"
+                    class="error"
+                ></p>
+
+
+                <!-- ANALYZE BUTTON -->
+
+                <button
+                    id="analyzeButton"
+                    class="primary-btn analyze-btn"
+                    type="submit"
+                >
+                    Analyze Transaction →
+                </button>
+
+            </form>
+
+
+            <div class="analyzer-info">
+
+                <div>
+                    <strong>01</strong>
+                    Amount & Context
+                </div>
+
+                <div>
+                    <strong>02</strong>
+                    Recipient Trust
+                </div>
+
+                <div>
+                    <strong>03</strong>
+                    Scam Language
+                </div>
+
+                <div>
+                    <strong>04</strong>
+                    Spending Behavior
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     RESULT PAGE
+     ========================================================= -->
+
+<section
+    id="resultPage"
+    class="app-page"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <p class="eyebrow">
+                SCAMSHIELD DECISION ENGINE
+            </p>
+
+            <h2>
+                Transaction Risk Result
+            </h2>
+
+            <p>
+                Multi-signal pre-payment risk assessment.
+            </p>
+
+        </div>
+
+        <button
+            type="button"
+            class="secondary-btn"
+            data-page-target="analyzePage"
+        >
+            ← New Check
+        </button>
+
+    </div>
+
+
+    <div
+        id="emptyState"
+        class="panel result-empty"
+    >
+
+        <div class="empty-icon">
+            ✓
+        </div>
+
+        <h3>
+            No transaction analyzed yet
+        </h3>
+
+        <p>
+            Analyze a transaction first to generate a ScamShield risk decision.
+        </p>
+
+        <button
+            type="button"
+            class="primary-btn"
+            data-page-target="analyzePage"
+        >
+            Analyze Transaction →
+        </button>
+
+    </div>
+
+
+    <div
+        id="resultContent"
+        class="result-dashboard hidden"
+        hidden
+    >
+
+        <div class="panel risk-hero-card">
+
+            <div>
+
+                <p class="eyebrow">
+                    TRANSACTION RISK SCORE
+                </p>
+
+                <div class="big-score">
+                    <span id="scoreValue">0/100</span>
+                </div>
+
+                <h3 id="riskLabel">
+                    Lower risk
+                </h3>
+
+            </div>
+
+
+            <div>
+
+                <span
+                    id="decisionBadge"
+                    class="decision-badge"
+                >
+                    ALLOW
+                </span>
+
+            </div>
+
+
+            <div class="risk-meter-wrapper">
+
+                <div class="meter">
+
+                    <div
+                        id="scoreMeter"
+                        role="progressbar"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        aria-valuenow="0"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="result-signal-grid">
+
+
+            <!-- =====================================================
+                 RECIPIENT INTELLIGENCE
+                 ===================================================== -->
+
+            <div class="panel signal-result-card">
+
+                <div class="signal-card-top">
+
+                    <span class="signal-number">
+                        01
+                    </span>
+
+                    <span
+                        id="trustLevel"
+                        class="trust-badge"
+                    >
+                        UNKNOWN
+                    </span>
+
+                </div>
+
+                <p class="eyebrow">
+                    RECIPIENT
+                </p>
+
+                <h3>
+                    Trust Intelligence
+                </h3>
+
+                <div class="mini-score">
+
+                    <span id="trustScore">
+                        0
+                    </span>
+
+                    <small>
+                        /100
+                    </small>
+
+                </div>
+
+                <div class="trust-meter">
+                    <div id="trustMeter"></div>
+                </div>
+
+                <p class="mini-info">
+                    Previous transactions:
+                    <strong id="previousTransactions">
+                        0
+                    </strong>
+                </p>
+
+            </div>
+
+
+            <!-- =====================================================
+                 SCAM LANGUAGE
+                 ===================================================== -->
+
+            <div class="panel signal-result-card">
+
+                <div class="signal-card-top">
+
+                    <span class="signal-number">
+                        02
+                    </span>
+
+                    <span
+                        id="scamStatus"
+                        class="scam-status safe"
+                    >
+                        CLEAR
+                    </span>
+
+                </div>
+
+                <p class="eyebrow">
+                    SOCIAL ENGINEERING
+                </p>
+
+                <h3>
+                    Scam Language
+                </h3>
+
+                <p
+                    id="scamDescription"
+                    class="signal-description"
+                >
+                    No suspicious payment language detected.
+                </p>
+
+                <div
+                    id="keywordContainer"
+                    class="keyword-container"
+                ></div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 BEHAVIOR
+                 ===================================================== -->
+
+            <div class="panel signal-result-card">
+
+                <div class="signal-card-top">
+
+                    <span class="signal-number">
+                        03
+                    </span>
+
+                    <span
+                        id="behaviorLevel"
+                        class="behavior-badge"
+                    >
+                        LEARNING
+                    </span>
+
+                </div>
+
+                <p class="eyebrow">
+                    USER BEHAVIOR
+                </p>
+
+                <h3>
+                    Behavioral Anomaly
+                </h3>
+
+                <div class="behavior-value">
+
+                    <span id="behaviorDeviation">
+                        —
+                    </span>
+
+                    <small>
+                        × baseline
+                    </small>
+
+                </div>
+
+                <p class="mini-info">
+
+                    Baseline:
+
+                    <strong id="behaviorBaseline">
+                        ₹0
+                    </strong>
+
+                </p>
+
+                <p class="mini-info">
+
+                    Behavior score:
+
+                    <strong id="behaviorScore">
+                        0
+                    </strong>
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================================
+             RECOMMENDED ACTION
+             ========================================================= -->
+
+        <div class="panel recommendation-card">
+
+            <div>
+
+                <p class="eyebrow">
+                    RECOMMENDED ACTION
+                </p>
+
+                <h3>
+                    What should the user do?
+                </h3>
+
+                <p id="adviceText">
+                    —
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                class="primary-btn"
+                data-page-target="detailsPage"
+            >
+                View Detailed Analysis →
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     DETAILS PAGE
+     ========================================================= -->
+
+<section
+    id="detailsPage"
+    class="app-page"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <p class="eyebrow">
+                EXPLAINABLE DECISION
+            </p>
+
+            <h2>
+                Why did ScamShield decide this?
+            </h2>
+
+            <p>
+                Review the signals behind the risk decision.
+            </p>
+
+        </div>
+
+        <button
+            type="button"
+            class="secondary-btn"
+            data-page-target="resultPage"
+        >
+            ← Result
+        </button>
+
+    </div>
+
+
+    <div class="details-layout">
+
+
+        <!-- RISK EXPLANATION -->
+
+        <div class="panel explanation-panel">
+
+            <p class="eyebrow">
+                RISK EXPLANATION
+            </p>
+
+            <h3>
+                Detected Risk Signals
+            </h3>
+
+            <ul
+                id="reasonList"
+                class="reason-list"
+            >
+
+                <li>
+                    Analyze a transaction to view its explanation.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- RECIPIENT INTELLIGENCE -->
+
+        <div class="panel explanation-panel">
+
+            <p class="eyebrow">
+                RECIPIENT INTELLIGENCE
+            </p>
+
+            <h3>
+                Trust Signals
+            </h3>
+
+            <ul
+                id="trustSignals"
+                class="reason-list"
+            >
+
+                <li>
+                    No recipient analysis available.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- BEHAVIORAL INTELLIGENCE -->
+
+        <div class="panel explanation-panel">
+
+            <p class="eyebrow">
+                BEHAVIORAL INTELLIGENCE
+            </p>
+
+            <h3>
+                Spending Pattern Signals
+            </h3>
+
+            <ul
+                id="behaviorSignals"
+                class="reason-list"
+            >
+
+                <li>
+                    No behavioral analysis available.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- DECISION PIPELINE -->
+
+        <div class="panel explanation-panel">
+
+            <p class="eyebrow">
+                DECISION PIPELINE
+            </p>
+
+            <h3>
+                Multi-Signal Analysis
+            </h3>
+
+            <div class="engine-flow">
+
+                <span>Transaction</span>
+
+                <b>+</b>
+
+                <span>Recipient</span>
+
+                <b>+</b>
+
+                <span>Language</span>
+
+                <b>+</b>
+
+                <span>Behavior</span>
+
+                <b>→</b>
+
+                <span class="engine-final">
+                    Decision
+                </span>
+
+            </div>
+
+            <button
+                type="button"
+                class="primary-btn"
+                data-page-target="historyPage"
+            >
+                View Transaction History →
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     HISTORY PAGE
+     ========================================================= -->
+
+<section
+    id="historyPage"
+    class="app-page"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <p class="eyebrow">
+                PERSISTENT ACTIVITY
+            </p>
+
+            <h2>
+                Transaction History
+            </h2>
+
+            <p>
+                Transactions analyzed and stored in ScamShield's local SQLite database.
+            </p>
+
+        </div>
+
+
+        <div class="history-actions">
+
+            <button
+                id="clearHistoryBtn"
+                type="button"
+                class="secondary-btn"
+            >
+                Clear History
+            </button>
+
+            <button
+                type="button"
+                class="primary-btn"
+                data-page-target="analyzePage"
+            >
+                + New Transaction
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- HISTORY STATISTICS -->
+
+    <div class="history-stats">
+
+        <div class="panel stat-card">
+
+            <p>
+                TRANSACTIONS ANALYZED
+            </p>
+
+            <h3 id="totalCount">
+                0
+            </h3>
+
+        </div>
+
+
+        <div class="panel stat-card">
+
+            <p>
+                NEEDS REVIEW
+            </p>
+
+            <h3 id="reviewCount">
+                0
+            </h3>
+
+        </div>
+
+
+        <div class="panel stat-card">
+
+            <p>
+                HIGH-RISK FLAGS
+            </p>
+
+            <h3 id="blockCount">
+                0
+            </h3>
+
+        </div>
+
+    </div>
+
+
+    <!-- HISTORY TABLE -->
+
+    <div class="panel history-panel">
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            RECIPIENT
+                        </th>
+
+                        <th>
+                            UPI ID
+                        </th>
+
+                        <th>
+                            AMOUNT
+                        </th>
+
+                        <th>
+                            SCORE
+                        </th>
+
+                        <th>
+                            DECISION
+                        </th>
+
+                        <th>
+                            TIME
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="transactionRows">
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="empty-row"
+                        >
+                            No transactions analyzed yet.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <p class="prototype-disclaimer">
+        Educational prototype only. No real UPI payment is processed or intercepted.
+    </p>
+
+</section>
+
+
+</main>
+
+</div>
+
+
+<!-- =========================================================
+     ORIGINAL SCAMSHIELD JAVASCRIPT
+     ========================================================= -->
+
+<script src="{{ url_for('static', filename='app.js') }}?v=4.1.0"></script>
+
+
+<!-- =========================================================
+     WELCOME PAGE CONTROL
+     ========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const welcomePage =
+            document.getElementById("welcomePage");
+
+        const mainApplication =
+            document.getElementById("mainApplication");
+
+        const homePageButton =
+            document.getElementById("homePageButton");
+
+
+        function openMainApplication() {
+
+            if (welcomePage) {
+
+                welcomePage.classList.add(
+                    "hidden"
+                );
+
+            }
+
+
+            if (mainApplication) {
+
+                mainApplication.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+
+        if (homePageButton) {
+
+            homePageButton.addEventListener(
+                "click",
+                openMainApplication
+            );
+
+        }
+
+    }
+
+);
+
+</script>
+
+</body>
+</html>
